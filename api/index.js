@@ -33,7 +33,7 @@ app.get('/api/admin/generate-link', (req, res) => {
         // 存入数据库，状态为"未使用"
         inviteDatabase[code] = { status: 'unused' };
 
-        const frontEndUrl = process.env.FRONTEND_URL;
+        const frontEndUrl = process.env.FRONTEND_URL||'https://facevaluepagenew0425.vercel.app/';
         const shareLink = `${frontEndUrl}?code=${code}`;
 
         // 返回生成结果
