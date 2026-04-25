@@ -13,8 +13,8 @@ const ADMIN_SECRET = 'myboss123';
 // const FACE_API_SECRET = process.env.FACE_API_SECRET;
 // const ADMIN_SECRET = process.env.ADMIN_SECRET;
 // 存邀请码的状态，格式如 { 'INV_A1B2C': { status: 'unused' } }
-const inviteDatabase = {}; 
-
+// const inviteDatabase = {}; 
+const { kv } = require('@vercel/kv');
 // ==========================================
 // 核心2：管理员专属 - 生成单次邀请链接
 // ==========================================
@@ -31,7 +31,8 @@ app.get('/api/admin/generate-link', (req, res) => {
         const code = 'INV_' + Math.random().toString(36).substring(2, 8).toUpperCase();
         
         // 存入数据库，状态为"未使用"
-        inviteDatabase[code] = { status: 'unused' };
+        // inviteDatabase[code] = { status: 'unused' };
+        await kv.set(code, { status: 'unused' }, { ex: 86400 });
 
         const frontEndUrl = process.env.FRONTEND_URL||'https://facevaluepagenew0425.vercel.app/';
         const shareLink = `${frontEndUrl}?code=${code}`;
@@ -59,7 +60,8 @@ app.post('/api/face-detect', async (req, res) => {
         const { image_base64, inviteCode } = req.body;
 
         // 🛡️ 防火墙：校验邀请码是否有效且未使用
-        const inviteRecord = inviteDatabase[inviteCode];
+        // const inviteRecord = inviteDatabase[inviteCode];
+        const inviteRecord = await kv.get(inviteCode);
         if (!inviteRecord) {
             return res.status(403).json({ error: '无效的邀请链接！请向管理员索要专属链接。' });
         }
@@ -79,7 +81,8 @@ app.post('/api/face-detect', async (req, res) => {
         });
 
         // 测算成功后，🔥 立刻核销作废该邀请码
-        inviteDatabase[inviteCode].status = 'used';
+        // inviteDatabase[inviteCode].status = 'used';
+        await kv.set(inviteCode, { status: 'used' }, { ex: 86400 })
 
         res.json(faceRes.data);
 
