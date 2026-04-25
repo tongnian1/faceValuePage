@@ -6,12 +6,12 @@ const app = express();
 app.use(cors());
 app.use(express.json({ limit: '15mb' }));
 
-// const FACE_API_KEY = 'dsO3p8rDxhBbSSAI5L8l2QYZWsWBBUNj';
-// const FACE_API_SECRET = '35LhwuV60Nca-fSVHGHjnriSZPqASxWE';
-// const ADMIN_SECRET = 'myboss123'; 
-const FACE_API_KEY = process.env.FACE_API_KEY;
-const FACE_API_SECRET = process.env.FACE_API_SECRET;
-const ADMIN_SECRET = process.env.ADMIN_SECRET;
+const FACE_API_KEY = 'dsO3p8rDxhBbSSAI5L8l2QYZWsWBBUNj';
+const FACE_API_SECRET = '35LhwuV60Nca-fSVHGHjnriSZPqASxWE';
+const ADMIN_SECRET = 'myboss123'; 
+// const FACE_API_KEY = process.env.FACE_API_KEY;
+// const FACE_API_SECRET = process.env.FACE_API_SECRET;
+// const ADMIN_SECRET = process.env.ADMIN_SECRET;
 // 存邀请码的状态，格式如 { 'INV_A1B2C': { status: 'unused' } }
 const inviteDatabase = {}; 
 
@@ -30,7 +30,7 @@ app.get('/api/admin/generate-link', (req, res) => {
     // 存入数据库，状态为“未使用”
     inviteDatabase[code] = { status: 'unused' };
 
-    const frontEndUrl = process.env.FRONTEND_URL || 'https://你的github网页地址';
+    const frontEndUrl = process.env.FRONTEND_URL ||'https://facevaluepagenew0425.vercel.app'|| 'https://你的github网页地址';
     const shareLink = `${frontEndUrl}?code=${code}`;
     // const frontEndUrl = 'http://127.0.0.1:5500/my-face-app2/frontend/index.html';
     // const shareLink = `${frontEndUrl}?code=${code}`;
