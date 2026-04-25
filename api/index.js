@@ -21,28 +21,34 @@ const inviteDatabase = {};
 console.log(11111111111111,);
 
 app.get('/api/admin/generate-link', (req, res) => {
-    // 校验管理员密码
-    if (req.query.secret !== ADMIN_SECRET) {
-        return res.status(401).send('无权访问！密码错误。');
+     try {
+        // 校验管理员密码
+        if (req.query.secret !== ADMIN_SECRET) {
+            return res.status(401).send('无权访问！密码错误。');
+        }
+
+        // 生成一个随机的 8 位大写邀请码
+        const code = 'INV_' + Math.random().toString(36).substring(2, 8).toUpperCase();
+        
+        // 存入数据库，状态为"未使用"
+        inviteDatabase[code] = { status: 'unused' };
+
+        const frontEndUrl = process.env.FRONTEND_URL;
+        const shareLink = `${frontEndUrl}?code=${code}`;
+
+        // 返回生成结果
+        res.json({
+            message: '生成成功！请把下面的链接复制发给朋友',
+            inviteCode: code,
+            shareLink: shareLink
+        });
+    } catch (error) {
+        console.error('生成邀请链接时出错:', error,ADMIN_SECRET,FACE_API_KEY);
+        res.status(500).json({ 
+            error: '生成邀请链接失败', 
+            details: error.message 
+        });
     }
-
-    // 生成一个随机的 8 位大写邀请码
-    const code = 'INV_' + Math.random().toString(36).substring(2, 8).toUpperCase();
-    
-    // 存入数据库，状态为“未使用”
-    inviteDatabase[code] = { status: 'unused' };
-
-    const frontEndUrl = process.env.FRONTEND_URL;
-    const shareLink = `${frontEndUrl}?code=${code}`;
-    // const frontEndUrl = 'http://127.0.0.1:5500/my-face-app2/frontend/index.html';
-    // const shareLink = `${frontEndUrl}?code=${code}`;
-
-    // 返回生成结果
-    res.json({
-        message: '生成成功！请把下面的链接复制发给朋友',
-        inviteCode: code,
-        shareLink: shareLink
-    });
 });
 
 // ==========================================
