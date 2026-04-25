@@ -18,6 +18,8 @@ const inviteDatabase = {};
 // ==========================================
 // 核心2：管理员专属 - 生成单次邀请链接
 // ==========================================
+console.log(11111111111111,);
+
 app.get('/api/admin/generate-link', (req, res) => {
     // 校验管理员密码
     if (req.query.secret !== ADMIN_SECRET) {
@@ -30,7 +32,7 @@ app.get('/api/admin/generate-link', (req, res) => {
     // 存入数据库，状态为“未使用”
     inviteDatabase[code] = { status: 'unused' };
 
-    const frontEndUrl = process.env.FRONTEND_URL ||'https://facevaluepagenew0425.vercel.app'|| 'https://你的github网页地址';
+    const frontEndUrl = process.env.FRONTEND_URL;
     const shareLink = `${frontEndUrl}?code=${code}`;
     // const frontEndUrl = 'http://127.0.0.1:5500/my-face-app2/frontend/index.html';
     // const shareLink = `${frontEndUrl}?code=${code}`;
