@@ -84,6 +84,7 @@ app.post('/api/face-detect', async (req, res) => {
 // app.listen(3000, () => {
 //     console.log('防白嫖服务器运行在 http://localhost:3000');
 // });
-if (process.env.NODE_ENV !== 'production') {
-    app.listen(3000, () => console.log('Server running on port 3000'));
-}
+// if (process.env.NODE_ENV !== 'production') {
+//     app.listen(3000, () => console.log('Server running on port 3000'));
+// }
+module.exports = app;
